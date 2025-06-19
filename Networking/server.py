@@ -5,13 +5,8 @@ import socket
 
 
 # vars
-INT = 4
+INT_SIZE = 4
 BUFFER = 1024
-
-
-###########################################################
-####################### YOUR CODE #########################
-###########################################################
 
 
 def _form_format(data: bytes) -> str:
@@ -19,7 +14,7 @@ def _form_format(data: bytes) -> str:
     Format the string format for unpacking a struct.
     '''
 
-    data_len = len(data[INT:])
+    data_len = len(data[INT_SIZE:])
     return f'<i{data_len}s'
 
 
@@ -43,11 +38,6 @@ def run_server(server_ip: str, server_port: int):
         client_socket.close()
 
 
-###########################################################
-##################### END OF YOUR CODE ####################
-###########################################################
-
-
 def get_args():
     parser = argparse.ArgumentParser(description='Send data to server.')
     parser.add_argument('server_ip', type=str,
@@ -62,12 +52,8 @@ def main():
     Implementation of CLI and sending data to server.
     '''
     args = get_args()
-    try:
-        run_server(args.server_ip, args.server_port)
-    except Exception as error:
-        print(f'ERROR: {error}')
-        return 1
+    run_server(args.server_ip, args.server_port)
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    main()

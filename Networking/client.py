@@ -4,11 +4,6 @@ import struct
 import socket
 
 
-###########################################################
-####################### YOUR CODE #########################
-###########################################################
-
-
 def _form_format( data_len: int) -> str:
     '''
     Format the string format for a struct.
@@ -35,11 +30,6 @@ def send_data(server_ip: str, server_port: int, data: str):
     client_socket.close()
 
 
-###########################################################
-##################### END OF YOUR CODE ####################
-###########################################################
-
-
 def get_args():
     parser = argparse.ArgumentParser(description='Send data to server.')
     parser.add_argument('server_ip', type=str,
@@ -56,13 +46,9 @@ def main():
     Implementation of CLI and sending data to server.
     '''
     args = get_args()
-    try:
-        send_data(args.server_ip, args.server_port, args.data)
-        print('Done.')
-    except Exception as error:
-        print(f'ERROR: {error}')
-        return 1
+    send_data(args.server_ip, args.server_port, args.data)
+    print('Done sending data.')
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    main()
