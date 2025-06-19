@@ -24,7 +24,6 @@ def thread_act(client_socket: socket) -> None:
     Receive connection data in a different thread.
     """
 
-    # Later a condition for lasting connection in a while True loop can be added
     data = client_socket.recv(BUFFER_SIZE)
     length, message = struct.unpack(_form_format(data), data)
     print(f"Received data: {message.decode()}")
@@ -48,9 +47,6 @@ def run_server(server_ip: str, server_port: int):
 
         curr_thread = threading.Thread(target=thread_act, args=(client_socket,))
         curr_thread.start()
-        # curr_thread.join()
-
-        # print("Done!!")
 
 
 def get_args():
