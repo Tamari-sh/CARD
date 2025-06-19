@@ -6,7 +6,7 @@ import socket
 
 # vars
 INT_SIZE = 4
-BUFFER = 1024
+BUFFER_SIZE = 1024
 
 
 def _form_format(data: bytes) -> str:
