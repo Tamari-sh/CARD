@@ -46,10 +46,11 @@ def run_server(server_ip: str, server_port: int):
 
         client_socket, client_address = server_socket.accept()
 
-        t1 = threading.Thread(target=thread_act, args=(client_socket,))
-        t1.start()
-        t1.join()
-        print("Done!!")
+        curr_thread = threading.Thread(target=thread_act, args=(client_socket,))
+        curr_thread.start()
+        # curr_thread.join()
+
+        # print("Done!!")
 
 
 def get_args():
@@ -69,7 +70,7 @@ def main():
     """
     Implementation of CLI and sending data to server.
     """
-    
+
     args = get_args()
     run_server(args.server_ip, args.server_port)
 
