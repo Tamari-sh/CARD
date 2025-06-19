@@ -21,7 +21,7 @@ def _form_format(data: bytes) -> str:
 
 def thread_act(client_socket: socket) -> None:
     """
-    Actions to be executed on a different thread.
+    Receive connection data in a different thread.
     """
 
     # Later a condition for lasting connection in a while True loop can be added
@@ -53,6 +53,10 @@ def run_server(server_ip: str, server_port: int):
 
 
 def get_args():
+    """
+    Function to get cmd arguments.
+    """
+
     parser = argparse.ArgumentParser(description='Send data to server.')
     parser.add_argument('server_ip', type=str,
                         help='the servers ip')
@@ -65,6 +69,7 @@ def main():
     """
     Implementation of CLI and sending data to server.
     """
+    
     args = get_args()
     run_server(args.server_ip, args.server_port)
 
