@@ -3,7 +3,6 @@ import sys
 import struct
 import socket
 import threading
-from _thread import *
 
 
 # vars
@@ -26,11 +25,10 @@ def thread_act(client_socket: socket) -> None:
     """
 
     # Later a condition for lasting connection in a while True loop can be added
-    data = client_socket.recv(BUFFER)
+    data = client_socket.recv(BUFFER_SIZE)
     length, message = struct.unpack(_form_format(data), data)
     print(f"Received data: {message.decode()}")
 
-    threading.lock().release()
     client_socket.close()
 
 
@@ -47,7 +45,6 @@ def run_server(server_ip: str, server_port: int):
         print("Server is up and running!")
 
         client_socket, client_address = server_socket.accept()
-        threading.lock().acquire()
 
         t1 = threading.Thread(target=thread_act, args=(client_socket,))
         t1.start()
