@@ -2,6 +2,8 @@ import argparse
 import sys
 import struct
 import socket
+import threading
+from _thread import *
 
 
 # vars
@@ -10,32 +12,47 @@ BUFFER_SIZE = 1024
 
 
 def _form_format(data: bytes) -> str:
-    '''
+    """
     Format the string format for unpacking a struct.
-    '''
+    """
 
     data_len = len(data[INT_SIZE:])
     return f'<i{data_len}s'
 
 
+def thread_act(client_socket: socket) -> None:
+    """
+    Actions to be executed on a different thread.
+    """
+
+    # Later a condition for lasting connection in a while True loop can be added
+    data = client_socket.recv(BUFFER)
+    length, message = struct.unpack(_form_format(data), data)
+    print(f"Received data: {message.decode()}")
+
+    threading.lock().release()
+    client_socket.close()
+
+
 def run_server(server_ip: str, server_port: int):
-    '''
+    """
     Initialize a server in address (server_ip, server_port).
-    '''
+    """
 
     server_socket = socket.socket()
     server_socket.bind((server_ip, server_port))
 
     while True:
         server_socket.listen()
-        print("Server is up and running")
+        print("Server is up and running!")
 
         client_socket, client_address = server_socket.accept()
-        data = client_socket.recv(BUFFER)
-        length, message = struct.unpack(_form_format(data), data)
-        print(f"Received data: {message.decode()}")
+        threading.lock().acquire()
 
-        client_socket.close()
+        t1 = threading.Thread(target=thread_act, args=(client_socket,))
+        t1.start()
+        t1.join()
+        print("Done!!")
 
 
 def get_args():
@@ -48,9 +65,9 @@ def get_args():
 
 
 def main():
-    '''
+    """
     Implementation of CLI and sending data to server.
-    '''
+    """
     args = get_args()
     run_server(args.server_ip, args.server_port)
 
