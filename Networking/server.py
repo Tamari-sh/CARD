@@ -4,35 +4,43 @@ import struct
 import socket
 
 
+# vars
+INT = 4
+BUFFER = 1024
+
+
 ###########################################################
 ####################### YOUR CODE #########################
 ###########################################################
 
 
-def _form_format( data_len: int) -> str:
+def _form_format(data: bytes) -> str:
     '''
-    Format the string format for a struct.
+    Format the string format for unpacking a struct.
     '''
 
+    data_len = len(data[INT:])
     return f'<i{data_len}s'
 
 
-def send_data(server_ip: str, server_port: int, data: str):
+def run_server(server_ip: str, server_port: int):
     '''
-    Send data to server in address (server_ip, server_port).
+    Initialize a server in address (server_ip, server_port).
     '''
 
-    client_socket = socket.socket()
-    client_socket.connect((server_ip, server_port))
+    server_socket = socket.socket()
+    server_socket.bind((server_ip, server_port))
 
-    data_len = len(data)
-    bin_str = data.encode()
-    format = _form_format(data_len)
+    while True:
+        server_socket.listen()
+        print("Server is up and running")
 
-    message = struct.pack(format, data_len, bin_str)
-    client_socket.send(message)
+        client_socket, client_address = server_socket.accept()
+        data = client_socket.recv(BUFFER)
+        length, message = struct.unpack(_form_format(data), data)
+        print(f"Received data: {message.decode()}")
 
-    client_socket.close()
+        client_socket.close()
 
 
 ###########################################################
@@ -46,8 +54,6 @@ def get_args():
                         help='the servers ip')
     parser.add_argument('server_port', type=int,
                         help='the servers port')
-    parser.add_argument('data', type=str,
-                        help='the data')
     return parser.parse_args()
 
 
@@ -57,8 +63,7 @@ def main():
     '''
     args = get_args()
     try:
-        send_data(args.server_ip, args.server_port, args.data)
-        print('Done.')
+        run_server(args.server_ip, args.server_port)
     except Exception as error:
         print(f'ERROR: {error}')
         return 1
