@@ -4,7 +4,7 @@ import struct
 import socket
 
 
-def _form_format(data_len: int) -> str:
+def form_format_decode(data_len: int) -> str:
     """
     Format the string format for a struct.
     """
@@ -22,7 +22,7 @@ def send_data(server_ip: str, server_port: int, data: str):
 
     data_len = len(data)
     bin_str = data.encode()
-    format = _form_format(data_len)
+    format = form_format_decode(data_len)
 
     message = struct.pack(format, data_len, bin_str)
     client_socket.send(message)

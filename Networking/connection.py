@@ -22,6 +22,15 @@ class Connection:
         """Implement context manager __exit__ method"""
         self.connection.close()
 
+    def send_message(self, message: bytes) -> None:
+        """Send a message through the connection"""
+
+        message_len = len(message)
+        format = form_format_decode(message_len)
+
+        format_message = struct.pack(format, message_len, message)
+        self.connection.send(format_message)
+
 
 def main() -> None:
     """

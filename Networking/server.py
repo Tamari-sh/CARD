@@ -10,7 +10,7 @@ INT_SIZE = 4
 BUFFER_SIZE = 1024
 
 
-def _form_format(data: bytes) -> str:
+def form_format_encode(data: bytes) -> str:
     """
     Format the string format for unpacking a struct.
     """
@@ -25,7 +25,7 @@ def thread_act(client_socket: socket) -> None:
     """
 
     data = client_socket.recv(BUFFER_SIZE)
-    length, message = struct.unpack(_form_format(data), data)
+    length, message = struct.unpack(form_format_encode(data), data)
     print(f"Received data: {message.decode()}")
 
     client_socket.close()
