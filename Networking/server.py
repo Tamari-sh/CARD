@@ -1,8 +1,10 @@
+from __future__ import annotations
 import argparse
 import sys
 import struct
 import socket
 import threading
+from listener import *
 
 
 # vars
@@ -10,7 +12,7 @@ INT_SIZE = 4
 BUFFER_SIZE = 1024
 
 
-def form_format_encode(data: bytes) -> str:
+def form_format_server(data: bytes) -> str:
     """
     Format the string format for unpacking a struct.
     """
@@ -19,16 +21,13 @@ def form_format_encode(data: bytes) -> str:
     return f'<i{data_len}s'
 
 
-def thread_act(client_socket: socket) -> None:
+def thread_act(client_connection: Connection) -> None:
     """
     Receive connection data in a different thread.
     """
 
-    data = client_socket.recv(BUFFER_SIZE)
-    length, message = struct.unpack(form_format_encode(data), data)
-    print(f"Received data: {message.decode()}")
-
-    client_socket.close()
+    receive_msg = client_connection.receive_message()
+    print(f"Received data: {receive_msg}")
 
 
 def run_server(server_ip: str, server_port: int) -> None:
@@ -36,17 +35,13 @@ def run_server(server_ip: str, server_port: int) -> None:
     Initialize a server in address (server_ip, server_port).
     """
 
-    server_socket = socket.socket()
-    server_socket.bind((server_ip, server_port))
-
     while True:
-        server_socket.listen()
-        print("Server is up and running!")
-
-        client_socket, client_address = server_socket.accept()
-
-        curr_thread = threading.Thread(target=thread_act, args=(client_socket,))
-        curr_thread.start()
+        with Listener(server_ip, server_port) as server_socket:
+            server_socket.start()
+            print("Server is up and running!")
+            with server_socket.accept() as client_connection:
+                curr_thread = threading.Thread(target=thread_act, args=(client_connection,))
+                curr_thread.start()
 
 
 def get_args() -> argparse.Namespace:

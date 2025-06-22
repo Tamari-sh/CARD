@@ -1,10 +1,12 @@
+from __future__ import annotations
 import argparse
 import sys
 import struct
 import socket
+from connection import *
 
 
-def form_format_decode(data_len: int) -> str:
+def form_format_client(data_len: int) -> str:
     """
     Format the string format for a struct.
     """
@@ -17,17 +19,9 @@ def send_data(server_ip: str, server_port: int, data: str):
     Send data to server in address (server_ip, server_port).
     """
 
-    client_socket = socket.socket()
-    client_socket.connect((server_ip, server_port))
-
-    data_len = len(data)
-    bin_str = data.encode()
-    format = form_format_decode(data_len)
-
-    message = struct.pack(format, data_len, bin_str)
-    client_socket.send(message)
-
-    client_socket.close()
+    with Connection.connect_method(server_ip, server_port) as client_socket:
+        bin_data = data.encode()
+        client_socket.send_message(bin_data)
 
 
 def get_args() -> argparse.Namespace:

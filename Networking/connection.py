@@ -28,7 +28,7 @@ class Connection:
         """Send a message through the connection"""
 
         message_len = len(message)
-        format = form_format_decode(message_len)
+        format = form_format_client(message_len)
 
         format_message = struct.pack(format, message_len, message)
         self.connection.send(format_message)
@@ -38,7 +38,7 @@ class Connection:
 
         try:
             data = self.connection.recv(BUFFER_SIZE)
-            length, message = struct.unpack(form_format_encode(data), data)
+            length, message = struct.unpack(form_format_server(data), data)
 
             return message.decode()
 
