@@ -46,13 +46,29 @@ class Connection:
 
             return None
 
+    def close(self) -> None:
+        """Close connection"""
+        self.connection.close()
+
+    @classmethod
+    def connect_method(cls: Connection, host: str, port: int) -> Connection:
+        """Class method that creates new instance of Connection"""
+
+        socket_connect = socket.socket()
+        socket_connect.connect((host, port))
+
+        return cls(socket_connect)
+
 
 def main() -> None:
     """
     Implementation of Connection class.
     """
 
-    pass
+    with Connection.connect('127.0.0.1', 8000) as connection:
+        connection.send_message(b'hello')
+        data = connection.receive_message()
+        print(data)
 
 
 if __name__ == '__main__':
