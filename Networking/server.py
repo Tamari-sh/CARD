@@ -31,7 +31,7 @@ def thread_act(client_socket: socket) -> None:
     client_socket.close()
 
 
-def run_server(server_ip: str, server_port: int):
+def run_server(server_ip: str, server_port: int) -> None:
     """
     Initialize a server in address (server_ip, server_port).
     """
@@ -49,7 +49,7 @@ def run_server(server_ip: str, server_port: int):
         curr_thread.start()
 
 
-def get_args():
+def get_args() -> argparse.Namespace:
     """
     Function to get cmd arguments.
     """
@@ -62,7 +62,7 @@ def get_args():
     return parser.parse_args()
 
 
-def main():
+def main() -> None:
     """
     Implementation of CLI and sending data to server.
     """

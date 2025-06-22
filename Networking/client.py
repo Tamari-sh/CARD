@@ -4,7 +4,7 @@ import struct
 import socket
 
 
-def _form_format( data_len: int) -> str:
+def _form_format(data_len: int) -> str:
     """
     Format the string format for a struct.
     """
@@ -30,7 +30,7 @@ def send_data(server_ip: str, server_port: int, data: str):
     client_socket.close()
 
 
-def get_args():
+def get_args() -> argparse.Namespace:
     """
     Function to get cmd arguments.
     """
@@ -45,7 +45,7 @@ def get_args():
     return parser.parse_args()
 
 
-def main():
+def main() -> None:
     """
     Implementation of CLI and sending data to server.
     """
