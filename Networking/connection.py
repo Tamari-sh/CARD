@@ -1,5 +1,6 @@
 from client import *
 from server import *
+import struct
 from typing import Any
 
 
@@ -30,6 +31,20 @@ class Connection:
 
         format_message = struct.pack(format, message_len, message)
         self.connection.send(format_message)
+
+    def receive_message(self) -> str or None:
+        """Function to get a message from the connection"""
+
+        try:
+            data = self.connection.recv(BUFFER_SIZE)
+            length, message = struct.unpack(form_format_encode(data), data)
+
+            return message.decode()
+
+        except OSError:
+            print("Connection closed before data was received")
+
+            return None
 
 
 def main() -> None:
