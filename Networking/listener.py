@@ -1,3 +1,4 @@
+import socket
 import struct
 from typing import Any
 
@@ -14,6 +15,14 @@ class Listener:
     def __repr__(self) -> str:
         """Create class representation"""
         return f"<Listener(port={self.port}, host={self.host}, backlog={self.backlog})>"
+
+    def start(self) -> None:
+        """Start Listener listening"""
+
+        listen_socket = socket.socket()
+        listen_socket.bind((self.host, self.port))
+
+        listen_socket.listen(self.backlog)
 
 
 def main() -> None:
