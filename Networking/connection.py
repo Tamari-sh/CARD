@@ -13,7 +13,7 @@ class Connection:
 
     def __repr__(self) -> str:
         """Create class representation"""
-        return f"<connection from {self.connection.getpeername()} to {self.connection.getsockname()}>"
+        return f"<connection from {self.connection.getsockname()} to {self.connection.getpeername()}>"
 
     def __enter__(self) -> socket.socket:
         """Implement context manager __enter__ method"""
