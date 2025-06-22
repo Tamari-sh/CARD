@@ -1,5 +1,6 @@
 from client import *
 from server import *
+from typing import Any
 
 
 class Connection:
@@ -12,6 +13,14 @@ class Connection:
     def __repr__(self) -> str:
         """Create class representation"""
         return f"<connection from {self.connection.getpeername()} to {self.connection.getsockname()}>"
+
+    def __enter__(self) -> socket.socket:
+        """Implement context manager __enter__ method"""
+        return self.connection
+
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+        """Implement context manager __exit__ method"""
+        self.connection.close()
 
 
 def main() -> None:
