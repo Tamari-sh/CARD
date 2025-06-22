@@ -1,3 +1,4 @@
+from __future__ import annotations
 from client import *
 from server import *
 import struct
@@ -15,13 +16,13 @@ class Connection:
         """Create class representation"""
         return f"<connection from {self.connection.getsockname()} to {self.connection.getpeername()}>"
 
-    def __enter__(self) -> socket.socket:
+    def __enter__(self) -> Connection:
         """Implement context manager __enter__ method"""
-        return self.connection
+        return self
 
     def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         """Implement context manager __exit__ method"""
-        self.connection.close()
+        self.close_conn()
 
     def send_message(self, message: bytes) -> None:
         """Send a message through the connection"""
@@ -46,7 +47,7 @@ class Connection:
 
             return None
 
-    def close(self) -> None:
+    def close_conn(self) -> None:
         """Close connection"""
         self.connection.close()
 
@@ -65,7 +66,8 @@ def main() -> None:
     Implementation of Connection class.
     """
 
-    with Connection.connect('127.0.0.1', 8000) as connection:
+    with Connection.connect_method('127.0.0.1', 8000) as connection:
+        print(connection)
         connection.send_message(b'hello')
         data = connection.receive_message()
         print(data)
